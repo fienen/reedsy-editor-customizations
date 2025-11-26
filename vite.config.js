@@ -4,18 +4,16 @@ import { resolve } from 'path';
 export default defineConfig({
     build: {
         lib: {
-            // The entry file to your code
-            entry: resolve(__dirname, 'src/main.js'), 
-
+            entry: resolve(__dirname, 'src/main.ts'), 
+            fileName: (format) => 'reedsy-customize-editor.user.js',
+            formats: ['iife'],
             name: 'ReedsyCustomizeEditor',
-
-            // The output file name (e.g., my-lib.js)
-            fileName: 'reedsy-customize-editor',
+            namespace: 'ReedsyCustomizeEditor',
         },
         minify: 'terser',
         terserOptions: {
           format: {
-            comments: 'some', // Preserve JSDoc comments
+            comments: 'some',
           },
         }
     },

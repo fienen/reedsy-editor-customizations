@@ -1,3 +1,4 @@
+/*!
 // ==UserScript==
 // @name         Reedsy Dark Mode
 // @namespace    http://github.com/fienen
@@ -9,11 +10,12 @@
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
+*/
 
 (function() {
     'use strict';
 
-    console.log('TEST');
+    console.log('TEST1');
     
     const enforceDarkTheme = () => {
         const html = document.documentElement;
