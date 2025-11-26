@@ -51,9 +51,9 @@
 
 
     // Set up an observer to watch for changes to the <html> class list
-    // This prevents Reedsy from overwriting your change when you navigate chapters
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
+            // This prevents Reedsy from overwriting your change when you navigate chapters
             if (mutation.attributeName === "class") enforceDarkTheme();
         });
     });
