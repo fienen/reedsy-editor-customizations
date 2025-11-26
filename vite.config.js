@@ -24,16 +24,11 @@ export default defineConfig({
       // IIFE is the standard format for UserScripts (prevents global variable leaks)
       formats: ['iife'],
     },
-    // This injects the header at the very top of the final file
-    rollupOptions: {
-      output: {
-        banner: banner,
-      },
-    },
     minify: 'terser',
     terserOptions: {
       format: {
-        comments: 'some'
+        comments: 'some',
+        preamble: banner
       },
     },
   },
