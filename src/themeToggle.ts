@@ -22,11 +22,9 @@ export const initThemeButton = () => {
 
         // Create our own click handler for our new element that will replace the default behavior
         newBtnWrapper.addEventListener('click', function () {
-            html.classList.toggle('light-theme');
-            html.classList.toggle('dark-theme');
-
             // Save preference for future page loads
-            html.classList.contains('dark-theme') ? GM_setValue('preferredTheme', 'dark') : GM_setValue('preferredTheme', 'light');
+            html.classList.contains('dark-theme') ? GM_setValue('preferredTheme', 'light') : GM_setValue('preferredTheme', 'dark');
+            enforceThemePreference();
         });
 
         // Replace the old button with the new one
