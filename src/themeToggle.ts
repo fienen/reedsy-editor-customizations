@@ -38,7 +38,7 @@ export const initThemeButton = () => {
             console.error('[Reedsy Editor Customizations] Failed to find theme button after multiple attempts. Giving up.');
             return;
         } else {
-            console.log('[Reedsy Editor Customizations] Editor not ready, retrying in 5 seconds. (Attempt ' + themeButtonReloads + ' of 10)');
+            console.log('[Reedsy Editor Customizations] Theme setting not ready, retrying in 5 seconds. (Attempt ' + themeButtonReloads + ' of 10)');
             setTimeout(initThemeButton, 5000);
         }
     }
