@@ -39,7 +39,7 @@ export const initThemeButton = () => {
             return;
         } else {
             console.log('[Reedsy Editor Customizations] Theme setting not ready, retrying in 5 seconds. (Attempt ' + themeButtonReloads + ' of 10)');
-            setTimeout(initThemeButton, 5000);
+            setTimeout(initThemeButton, 2500);
         }
     }
 };

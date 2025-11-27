@@ -4,23 +4,31 @@ let removeUpsellReloads = 0;
 export const removeUpsellPanels = () => {
     // Get elements that have ads
     let statsContainer  = document.querySelector('rbe-extra-stats');
-    let premiumAdBanner = document.querySelector('rbe-premium-ad-banner-wrapper');
+    let premiumAdBanner = document.querySelectorAll('rbe-premium-ad-banner-wrapper');
     let actionButtons   = document.querySelectorAll('#action-panel .action-button');
+    let premiumDesc     = document.querySelectorAll('rbe-premium-description');
 
-    if (premiumAdBanner && statsContainer && statsContainer.children.length > 1 && actionButtons.length > 0) {
+    if (premiumAdBanner && statsContainer && statsContainer.children.length > 1 && actionButtons.length > 0 && premiumDesc && premiumDesc.length > 0) {
         let statPanelsToRemove = statsContainer.querySelectorAll('.extra-stats-panel');
 
         // Remove the first two accordion panels found in the stat panel
         if (statPanelsToRemove.length > 1) {
             statPanelsToRemove[1].remove(); // Most used phrases
             statPanelsToRemove[0].remove(); // Most used words
+            console.log('[Reedsy Editor Customizations] Removed premium stats panels.');
         }
 
         // Remove the premium ad banner in the bottom of the left sidebar
-        premiumAdBanner.remove();
+        premiumAdBanner.forEach(banner => banner.remove());
+        console.log('[Reedsy Editor Customizations] Removed premium ad banners.');
 
         // Remove "Pinned note" button
         actionButtons[2].remove();
+        console.log('[Reedsy Editor Customizations] Removed premium feature buttons.');
+
+        // Remove premium description boxes ("Unlock Timeline")
+        premiumDesc.forEach(desc => desc.remove());
+        console.log('[Reedsy Editor Customizations] Removed premium feature description boxes.');
     } else {
         // Increment counter
         removeUpsellReloads++;
@@ -31,7 +39,7 @@ export const removeUpsellPanels = () => {
             return;
         } else {
             console.log('[Reedsy Editor Customizations] Upsell ads not detected, retrying in 5 seconds. (Attempt ' + removeUpsellReloads + ' of 10)');
-            setTimeout(removeUpsellPanels, 5000);
+            setTimeout(removeUpsellPanels, 2500);
         }
     }
 };
