@@ -1,7 +1,7 @@
 // Set up a reload timer because it can take a few seconds for the editor to load, and we don't want the script to run infinitely if there's a problem.
 let themeButtonReloads = 0;
 
-export const darkLightToggle = () => {
+export const initThemeButton = () => {
     // Find the theme button wrapper and unbind existing events
     let defaultBtnWrapper = document.querySelector('[title="Switch theme"]');
 
@@ -47,20 +47,22 @@ export const darkLightToggle = () => {
 };
 
 export const enforceThemePreference = () => {
+    // Try to get saved preference from Tampermonkey storage
     const preferredTheme = GM_getValue('preferredTheme');
-    console.log(`[Reedsy Editor Customizations] Enforcing preferred theme: ${preferredTheme}`);
-    /* OLD VERSION FOR REF ONLY
+
     // Grab our document root
     const html = document.documentElement;
 
-    // Check if the "light-theme" class exists, and if so, remove and replace it
-    if (html.classList.contains('light-theme')) {
-        html.classList.remove('light-theme');
-        html.classList.add('dark-theme');
-        console.log('Reedsy Theme Setter: Switched to Dark Theme.');
-    }
+    if(preferredTheme) {
+        console.log('[Reedsy Editor Customizations] Theme preference detected: ' + preferredTheme);
 
-    // Safety check: Ensure dark-theme is present if light isn't there but no theme is set
-    if (!html.classList.contains('light-theme') && !html.classList.contains('dark-theme')) html.classList.add('dark-theme');
-    */
+        // Apply the preferred theme if it's not already correct
+        if(preferredTheme === 'dark' && !html.classList.contains('dark-theme')) {
+            html.classList.remove('light-theme');
+            html.classList.add('dark-theme');
+        } else if(preferredTheme === 'light' && !html.classList.contains('light-theme')) {
+            html.classList.remove('dark-theme');
+            html.classList.add('light-theme');
+        }
+    }
 };

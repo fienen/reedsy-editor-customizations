@@ -1,10 +1,10 @@
-import { darkLightToggle, enforceThemePreference } from './themeToggle';
+import { initThemeButton, enforceThemePreference } from './themeToggle';
 import { removeUpsellPanels } from './removeUpsellPanels';
 
 (function() {
     'use strict';
 
-    // Set up an observer to watch for changes to the <html> class list
+    // Set up an observer to watch for changes to the <html> class list in case Reedsy tries to override our theme preference
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             // This prevents Reedsy from overwriting your change when you navigate chapters
@@ -12,10 +12,8 @@ import { removeUpsellPanels } from './removeUpsellPanels';
         });
     });
 
-    // Run immediately on load
-    darkLightToggle();
-
-    // Wait before trying to remove panels, because the app can take a moment to fully load
+    // Wait before trying to initialize to give the editor time to load
+    setTimeout(initThemeButton, 5000);
     setTimeout(removeUpsellPanels, 5000);
 
     // Start observing the <html> element
