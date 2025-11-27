@@ -1,1 +1,1 @@
-# reedsy-customize-editor
+# Reedsy Editor Customizations

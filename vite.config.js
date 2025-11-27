@@ -4,12 +4,13 @@ import { resolve } from 'path';
 const banner = `// ==UserScript==
 // @name         Reedsy Editor Customizations
 // @namespace    http://github.com/fienen
-// @version      0.1.251126
+// @version      0.2.251126
 // @description  Trick Reedsy into giving me dark mode
 // @author       Michael Fienen <fienen@gmail.com>
 // @match        https://editor.reedsy.com/book/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reedsy.com
-// @grant        none
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @run-at       document-idle
 // ==/UserScript==`;
 
