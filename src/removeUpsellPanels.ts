@@ -1,6 +1,31 @@
-// Set up a reload timer because it can take a few seconds for the editor to load, and we don't want the script to run infinitely if there's a problem.
 let removeUpsellReloads = 0;
 
+/**
+ * Removes premium upsell panels and advertisements from the Reedsy editor interface.
+ * 
+ * This function attempts to locate and remove various premium feature promotions including:
+ * - Premium statistics panels (most used words/phrases)
+ * - Premium ad banners in the sidebar
+ * - Premium feature buttons (pinned notes)
+ * - Premium feature description boxes
+ * 
+ * The function implements a retry mechanism that will attempt to find and remove elements
+ * up to 10 times with a 2.5 second delay between attempts. This accounts for the editor's
+ * asynchronous loading behavior.
+ * 
+ * @remarks
+ * This function modifies the DOM by removing elements and uses a module-level counter
+ * (`removeUpsellReloads`) to track retry attempts.
+ * 
+ * @example
+ * ```typescript
+ * // Call once to initiate the removal process
+ * removeUpsellPanels();
+ * ```
+ * 
+ * @returns void - Does not return a value, but logs success/failure messages to console
+ */
+// Set up a reload timer because it can take a few seconds for the editor to load, and we don't want the script to run infinitely if there's a problem.
 export const removeUpsellPanels = () => {
     // Get elements that have ads
     let statsContainer  = document.querySelector('rbe-extra-stats');
