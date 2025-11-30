@@ -60,7 +60,7 @@ export function updateWordFrequencyChart() {
             <div class="stat" data-v-a2feb5b3>
                 <div class="rce-word" title="${item.word}">${item.word}</div>
                 <div class="rce-word-bar">
-                    <div class="rce-word-bar-fill" style="width: ${percentage}%; ${percentage === 100 ? 'background-color:var(--local-color-emphasis)' : ''}"></div>
+                    <div class="rce-word-bar-fill" style="width: ${percentage}%"></div>
                 </div>
                 <div class="rce-word-count">${item.count}</div>
             </div>
