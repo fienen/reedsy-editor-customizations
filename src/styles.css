@@ -29,6 +29,6 @@
     width: auto;
 }
 .rce-word-bar-fill {
-    color: var(--local-color-default);
+    background-color: var(--local-color-default);
     height: var(--fbc-font-size);
 }
