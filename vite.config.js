@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
-const banner = `
-  // ==UserScript==
+const banner = `// ==UserScript==
   // @name         Reedsy Editor Customizations
   // @namespace    http://github.com/fienen/
   // @version      0.5.251130-alpha
@@ -18,8 +17,7 @@ const banner = `
   // @tag          productivity
   // @supportURL   https://github.com/fienen/reedsy-editor-customizations/issues/
   // @run-at       document-idle
-  // ==/UserScript==
-`;
+  // ==/UserScript==`;
 
 export default defineConfig({
   build: {
