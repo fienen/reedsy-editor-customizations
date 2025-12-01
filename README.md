@@ -4,13 +4,25 @@ A browser userscript/extension that customizes the [Reedsy Editor](https://reeds
 
 ## Features
 
-- **Theme Enablement**: Removes the modal and allows the dark/light theme toggle button to function as intended. Remembers your previous setting and applies it on future visits or reloads.
-- **Remove Upsell Panels**: Hides promotional elements including:
-  - "Most used words" panel
+### Theme Switching
+
+Removes the modal and allows the dark/light theme toggle button to function as intended. Remembers your previous setting and applies it on future visits or reloads.
+
+### Removes Upsell Advertising
+
+  - "Most used words" panel (the default one)
   - "Most used phrases" panel
-  - Premium ad banner in the sidebar
-  - Pinned note button
-  - "Unlock history" block
+  - Premium ad banner in the left sidebar
+  - Pinned note feature button
+  - "Unlock history" banner at the bottom of the feature
+
+Do you know of an ad we missed? [Report an issue!](https://github.com/fienen/reedsy-editor-customizations/issues/new)
+
+### Most Used Words
+
+![Example of the custom Most Used Words panel, showing words, counts, and a graph visualization](https://i.imgur.com/ruO3xP9.png "Custom Most Used Words panel")
+
+The built in "Most used words" panel in the sidebar only opens to an upsell ad. We remove that panel and replace it with our own version. It shows the top ten words from the active chapter, excluding a list of frequently occuring stop words that you're unlikely to target for change: 'the', 'and', 'a', 'an', 'in', 'on', 'of', 'to', 'is', 'it'. In the future, this will be a user customizable option.
 
 ## Installation
 
@@ -18,6 +30,7 @@ A browser userscript/extension that customizes the [Reedsy Editor](https://reeds
 
 - [Node.js](https://nodejs.org/) (v24 or higher recommended, likely to work with recent older versions)
 - npm (comes with Node.js)
+- Tampermonkey, Greasemonkey, or other userscript plugin for browsers
 
 ### Setup
 
@@ -70,6 +83,7 @@ The script:
 1. Detects if there is a previous theme preference and sets it at initialization
 2. Uses a MutationObserver to maintain the theme preference (in case navigation or other Reedsy behavior tries to reset it)
 3. Removes purely premium feature buttons, promotional panels, and ad banners after the page loads
+4. Runs a script 5 seconds after a pause in typing to calculate most used words
 
 ## License
 
