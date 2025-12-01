@@ -1,0 +1,161 @@
+import { chapterEditor, debounce } from "./utils";
+
+/**
+ * Extracts text from an HTML element and returns the top 10 most frequent words
+ * with their occurrence counts.
+ * @param {HTMLElement} element - The DOM element to analyze.
+ * @returns {Array<{word: string, count: number}>} - Array of objects sorted by count.
+ */
+export const getTopTenWordsWithCounts = () => {
+    const editorWrapper = document.getElementById('chapter-editor');
+    // TODO: After resolving Issue #13, turn this into a user option
+    const stopWordList = new Set(['the', 'and', 'a', 'an', 'in', 'on', 'of', 'to', 'is', 'it']);
+
+    // If there was a problem with the editor, kick out of the function
+    if (!editorWrapper) return;
+
+    // Extract and normalize the chapter text
+    const text = editorWrapper.textContent || editorWrapper.innerText;
+    const words = text
+        .toLowerCase()
+        .replace(/[^\w\s]/g, "") // Remove punctuation
+        .split(/\s+/)            // Split by whitespace
+        .filter(word => word.length > 0 && !stopWordList.has(word)); // Remove the stop words
+
+    // Count off the words
+    const frequencyMap: Record<string, number> = {};
+    words.forEach(word => {
+        frequencyMap[word] = (frequencyMap[word] || 0) + 1;
+    });
+
+    // Convert the map into an array of objects sorted by count: { word: "example", count: 5 }
+    const result = Object.keys(frequencyMap)
+        .map(word => ({ word: word, count: frequencyMap[word] }))
+        .sort((a, b) => b.count - a.count);
+
+    // Slice out top ten
+    return result.slice(0, 10);
+}
+
+/**
+ * Updates the word frequency chart in the DOM by displaying the top ten most frequent words
+ * with visual bar representations and their counts.
+ * 
+ * This function retrieves the word frequency data, clears any existing chart content,
+ * and generates a horizontal bar chart where each word is displayed with:
+ * - The word itself
+ * - A visual bar proportional to its frequency relative to the most frequent word
+ * - The exact count of occurrences
+ * 
+ * If no wrapper element is found or no word data is available, the function exits early
+ * or displays a "No data found" message.
+ * 
+ * @remarks
+ * - The function expects a DOM element with id 'rce-word-count-inner' to exist
+ * - The generated HTML includes Vue-specific data attributes (data-v-a2feb5b3)
+ * - Bar width percentages are calculated relative to the most frequent word (100%)
+ * - Logs a console message upon successful update
+ * 
+ * @returns {void}
+ */
+export function updateWordFrequencyChart() {
+    const wrapper = document.getElementById('rce-word-count-inner');
+
+    // Null check
+    if (!wrapper) return;
+
+    const frequentWords = getTopTenWordsWithCounts();
+
+    // Handle case if no words found (e.g. a brand new chapter)
+    if (!frequentWords || frequentWords.length === 0) {
+        wrapper.innerHTML = '<p>No data found.</p>';
+        return;
+    }
+
+    // Clear existing content
+    wrapper
+        .querySelectorAll('.stat')
+        ?.forEach(node => node.remove());
+
+    // Get the max count for percentage calculations
+    const maxCount = frequentWords[0].count;
+
+    // Render each top word entry
+    frequentWords.forEach(item => {
+        const percentage = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
+
+        // Template literal for row markup
+        const word = `
+            <div class="stat" data-v-a2feb5b3>
+                <div class="rce-word" title="${item.word}">${item.word}</div>
+                <div class="rce-word-bar">
+                    <div class="rce-word-bar-fill" style="width: ${percentage}%"></div>
+                </div>
+                <div class="rce-word-count">${item.count}</div>
+            </div>
+        `;
+        wrapper.insertAdjacentHTML('beforeend', word);
+    });
+
+    console.log('[Reedsy Editor Customizations] Most used words counts updated.');
+}
+
+/**
+ * Initializes the "Most used words" panel functionality.
+ * 
+ * Sets up event listeners for the toggle button to show/hide the panel,
+ * attaches a debounced keyup event handler to the chapter editor that updates
+ * the word frequency chart after 5 seconds of inactivity, and performs an
+ * initial update of the chart.
+ * 
+ * @remarks
+ * This function should be called once during application initialization.
+ * It relies on the global `chapterEditor` variable being available and
+ * expects a DOM element with ID 'rce-word-count-button' to exist.
+ * 
+ * @returns void
+ */
+export function initMostUsedWords() {
+    // Find the "Word count" panel (assumed as the last panel in the right sidebar)
+    const wordCountPanel = document.querySelector('rbe-extra-stats > :last-child');
+
+    // Remove the ad from "Most Used Words" and prep it for our version
+    let mostUsedWordsPanel        = document.createElement('div');
+    mostUsedWordsPanel.className  = 'extra-stats-panel';
+    mostUsedWordsPanel.id         = 'rce-word-count-panel';
+    mostUsedWordsPanel.setAttribute('data-v-fb827e44', ''); // This data attribute might be brittle if Reedsy changes their code
+    mostUsedWordsPanel.innerHTML  = `
+        <button type="button" class="expand-button flex-justified rce-panel-closed" id="rce-word-count-button" data-v-fb827e44>
+            Most used words 
+            <span class="vui-icon vui-icon-down" data-v-1a2a55eb data-v-fb827e44>
+                <svg data-v-ae557fc1="" viewBox="0 0 16 16"><g data-v-ae557fc1="" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><path data-v-ae557fc1="" id="icon-fill" d="M8.0000137,9.68417285 L2.7525904,3.59150909 C2.38890834,3.17587246 1.75714573,3.13375495 1.34150909,3.49743701 C0.925872462,3.86111906 0.883754954,4.49288168 1.24743701,4.90851831 L7.24743701,12.4085183 C7.6458483,12.8638455 8.35417911,12.8638455 8.7525904,12.4085183 L14.7525904,4.90851831 C15.1162724,4.49288168 15.0741549,3.86111906 14.6585183,3.49743701 C14.2428817,3.13375495 13.6111191,3.17587246 13.247437,3.59150909 L8.0000137,9.68417285 Z" fill="#2A2A2A" fill-rule="nonzero"></path></g></svg>
+            </span>
+        </button>
+    `;
+    let wordStatWrapper       = document.createElement('div');
+    wordStatWrapper.className = 'word-count';
+    wordStatWrapper.id        = 'rce-word-count-inner';
+    mostUsedWordsPanel.appendChild(wordStatWrapper);
+   
+    wordCountPanel?.before(mostUsedWordsPanel);
+
+    // Set up the toggle button behavior for the "Most used words" panel
+    let mostUsedWordButton = document.getElementById('rce-word-count-button');
+
+    mostUsedWordButton?.addEventListener('click', function () {
+        this.classList.toggle('rce-panel-closed');
+    });
+
+    // Create the debounced version of the handler (5000ms = 5 seconds)
+    const handleKeyUp = debounce(() => {
+        updateWordFrequencyChart();
+    }, 5000);
+
+    // Attach it to the end of a key press
+    chapterEditor?.addEventListener('keyup', handleKeyUp);
+
+    // Initial population of the chart
+    updateWordFrequencyChart();
+
+    console.log('[Reedsy Editor Customizations] "Most used words" panel initialized.');
+}

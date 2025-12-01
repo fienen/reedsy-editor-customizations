@@ -1,0 +1,40 @@
+#rce-word-count-inner {
+    border-collapse: separate;
+    border-spacing: 0 .5rem;
+    display: table;
+    height: 100%;
+    margin-bottom: -0.5rem;
+    table-layout: auto;
+}
+#rce-word-count-inner .stat:nth-child(-n+1) .rce-word-bar-fill {
+    background-color: var(--local-color-onMuted);
+}
+#rce-word-count-inner .stat:nth-last-child(-n+3) .rce-word-bar-fill {
+    background-color: var(--local-color-default);
+}
+#rce-word-count-inner .stat {
+    display: table-row;
+}
+#rce-word-count-inner .stat > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+.rce-panel-closed + #rce-word-count-inner {
+    display: none;
+}
+#rce-word-count-button:not(.rce-panel-closed) > .vui-icon {
+    transform: rotate(180deg);
+}
+.rce-word, 
+.rce-word-count {
+    width: 1%; 
+    white-space: nowrap;
+}
+.rce-word-bar {
+    padding: 0 1rem;
+    width: auto;
+}
+.rce-word-bar-fill {
+    background-color: var(--local-color-emphasis);
+    height: var(--fbc-font-size);
+}
